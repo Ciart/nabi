@@ -34,7 +34,6 @@ class _NabiDividerState extends State<NabiDivider> {
 
   @override
   Widget build(BuildContext context) {
-    InteractiveViewer
     return Container(
         child: widget.axis == Axis.horizontal
             ? _buildHorizontal()
