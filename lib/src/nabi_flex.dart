@@ -12,7 +12,7 @@ class NabiFlex extends StatefulWidget {
   _NabiFlexState createState() => _NabiFlexState();
 }
 
-class _NabiFlexState extends State<NabiFlex> with WidgetsBindingObserver {
+class _NabiFlexState extends State<NabiFlex> {
   var _sizes = <int>[];
   var _ratios = <double>[];
 
