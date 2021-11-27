@@ -6,11 +6,6 @@ class NabiData extends ChangeNotifier {
 
   NabiItemData root;
 
-  void update() {
-    root.children![0].size += 1;
-    notifyListeners();
-  }
-
   void addChild(String parentId, String name) {
     var parent = findItem(root, parentId);
     parent?.children?.add(NabiItemData.widget(widgetName: name));
