@@ -1,16 +1,19 @@
-import 'dart:math';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
 const double size = 4;
 
 class NabiDivider extends StatefulWidget {
-  const NabiDivider({Key? key, required this.axis, required this.color})
+  const NabiDivider(
+      {Key? key,
+      required this.direction,
+      required this.color,
+      required this.position})
       : super(key: key);
 
-  final Axis axis;
+  final Axis direction;
   final Color color;
+  final double position;
 
   @override
   _NabiDividerState createState() => _NabiDividerState();
@@ -18,7 +21,6 @@ class NabiDivider extends StatefulWidget {
 
 class _NabiDividerState extends State<NabiDivider> {
   bool _isHover = false;
-  int _position = 0;
 
   void _onEnter(PointerEnterEvent event) {
     setState(() {
@@ -35,14 +37,14 @@ class _NabiDividerState extends State<NabiDivider> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: widget.axis == Axis.horizontal
+        child: widget.direction == Axis.horizontal
             ? _buildHorizontal()
             : _buildVertical());
   }
 
   Widget _buildHorizontal() {
-    return Padding(
-      padding: EdgeInsets.only(left: max(_position - size / 2, 0)),
+    return Transform.translate(
+      offset: Offset(widget.position - size / 2, 0.0),
       child: MouseRegion(
         cursor: SystemMouseCursors.resizeLeftRight,
         onEnter: _onEnter,
@@ -60,8 +62,8 @@ class _NabiDividerState extends State<NabiDivider> {
   }
 
   Widget _buildVertical() {
-    return Padding(
-      padding: EdgeInsets.only(top: max(_position - size / 2, 0)),
+    return Transform.translate(
+      offset: Offset(0.0, widget.position - size / 2),
       child: MouseRegion(
         cursor: SystemMouseCursors.resizeUpDown,
         onEnter: _onEnter,
