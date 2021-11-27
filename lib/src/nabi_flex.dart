@@ -58,27 +58,37 @@ class _NabiFlexState extends State<NabiFlex> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-        builder: (context, constraints) => Stack(children: [
-              Flex(
-                  direction: widget.direction,
-                  children: widget.data.children?.map((e) {
-                        return Flexible(
-                            flex: e.size,
-                            child: Nabi.of(context).convertConfigToWidget(e));
-                      }).toList() ??
-                      []),
-              NabiDivider(
-                direction: widget.direction,
-                color: const Color(0xff333333),
-                position: constraints.maxWidth * _ratios[0],
-              ),
-              NabiDivider(
-                direction: widget.direction,
-                color: const Color(0xff333333),
-                position: constraints.maxWidth * _ratios[1],
-              )
-            ]));
+    var childrenData = widget.data.children ?? [];
+
+    return LayoutBuilder(builder: (context, constraints) {
+      return Stack(children: () {
+        List<Widget> children = [];
+
+        children.add(Flex(
+            direction: widget.direction,
+            children: childrenData.map((child) {
+              return Flexible(
+                  flex: child.size,
+                  child: Nabi.of(context).convertConfigToWidget(child));
+            }).toList()));
+
+        for (int i = 0; i < childrenData.length - 1; i++) {
+          children.add(NabiDivider(
+            direction: widget.direction,
+            color: const Color(0xff333333),
+            position: (widget.direction == Axis.horizontal
+                    ? constraints.maxWidth
+                    : constraints.maxHeight) *
+                _ratios[i],
+            onDrag: (details) {
+              print(i.toString() + ": " + details.delta.toString());
+            },
+          ));
+        }
+
+        return children;
+      }());
+    });
   }
 
   int computeSum(List<int> list) {

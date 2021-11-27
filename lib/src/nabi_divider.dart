@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
+typedef DividerDragCallback = void Function(DragUpdateDetails details);
+
 const double size = 4;
 
 class NabiDivider extends StatefulWidget {
@@ -8,12 +10,15 @@ class NabiDivider extends StatefulWidget {
       {Key? key,
       required this.direction,
       required this.color,
-      required this.position})
+      required this.position,
+      required this.onDrag})
       : super(key: key);
 
   final Axis direction;
   final Color color;
   final double position;
+
+  final DividerDragCallback onDrag;
 
   @override
   _NabiDividerState createState() => _NabiDividerState();
@@ -34,6 +39,10 @@ class _NabiDividerState extends State<NabiDivider> {
     });
   }
 
+  void _onDragUpdate(DragUpdateDetails details) {
+    widget.onDrag(details);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,6 +59,7 @@ class _NabiDividerState extends State<NabiDivider> {
         onEnter: _onEnter,
         onExit: _onExit,
         child: GestureDetector(
+          onHorizontalDragUpdate: _onDragUpdate,
           child: AnimatedContainer(
             width: size,
             color: _isHover ? widget.color : widget.color.withOpacity(0),
@@ -69,6 +79,7 @@ class _NabiDividerState extends State<NabiDivider> {
         onEnter: _onEnter,
         onExit: _onExit,
         child: GestureDetector(
+          onVerticalDragUpdate: _onDragUpdate,
           child: AnimatedContainer(
             height: size,
             color: _isHover ? widget.color : widget.color.withOpacity(0),

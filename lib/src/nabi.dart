@@ -39,10 +39,7 @@ class NabiState extends State<Nabi> {
         if (config.children == null) {
           return Container();
         }
-        return Column(
-            children: config.children!
-                .map((child) => Expanded(child: convertConfigToWidget(child)))
-                .toList());
+        return NabiFlex(direction: Axis.vertical, data: config);
     }
   }
 
