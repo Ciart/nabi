@@ -21,13 +21,13 @@ class App extends StatelessWidget {
             'a': Builder(builder: (context) => APanel()),
             'b': Builder(builder: (context) => BPanel())
           },
-          data: NabiData(NabiItemData(type: NabiItemType.row, children: [
-            NabiItemData(type: NabiItemType.widget, widgetName: 'a'),
-            NabiItemData(type: NabiItemType.widget, widgetName: 'b'),
-            NabiItemData(type: NabiItemType.column, children: [
-              NabiItemData(type: NabiItemType.widget, widgetName: 'a'),
-              NabiItemData(type: NabiItemType.widget, widgetName: 'b'),
-              NabiItemData(type: NabiItemType.widget, widgetName: 'a'),
+          data: Layout(LayoutFlex(direction: Axis.horizontal, children: [
+            LayoutWidget(name: 'a'),
+            LayoutWidget(name: 'b'),
+            LayoutFlex(direction: Axis.vertical, children: [
+              LayoutWidget(name: 'a'),
+              LayoutWidget(name: 'b'),
+              LayoutWidget(name: 'a'),
             ]),
           ])),
         );

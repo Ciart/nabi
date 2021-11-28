@@ -1,26 +1,29 @@
 import 'package:flutter/foundation.dart';
 import 'package:nabi/nabi.dart';
 
-class NabiData extends ChangeNotifier {
-  NabiData(this.root);
+class Layout extends ChangeNotifier {
+  Layout(this.root);
 
-  NabiItemData root;
+  LayoutItem root;
 
   void addChild(String parentId, String name) {
     var parent = findItem(root, parentId);
-    parent?.children?.add(NabiItemData.widget(widgetName: name));
+
+    if (parent is LayoutGroup) {
+      parent.children.add(LayoutWidget(name: name));
+    }
   }
 
-  NabiItemData? findItem(NabiItemData data, String parentId) {
+  LayoutItem? findItem(LayoutItem data, String parentId) {
     if (data.id == parentId) {
       return data;
     }
 
-    if (data.children == null) {
+    if (!(data is LayoutGroup)) {
       return null;
     }
 
-    for (var child in data.children!) {
+    for (var child in data.children) {
       var result = findItem(child, parentId);
 
       if (result != null) {

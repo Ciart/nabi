@@ -6,7 +6,7 @@ class Nabi extends StatefulWidget {
       : super(key: key);
 
   final Map<String, Widget> registeredWidgets;
-  final NabiData data;
+  final Layout data;
 
   static NabiState of(BuildContext context) {
     final result = context.findAncestorStateOfType<NabiState>();
@@ -26,20 +26,13 @@ class NabiState extends State<Nabi> {
     super.initState();
   }
 
-  Widget convertConfigToWidget(NabiItemData config) {
-    switch (config.type) {
-      case NabiItemType.widget:
-        return widget.registeredWidgets[config.widgetName] ?? Container();
-      case NabiItemType.row:
-        if (config.children == null) {
-          return Container();
-        }
-        return NabiFlex(direction: Axis.horizontal, data: config);
-      case NabiItemType.column:
-        if (config.children == null) {
-          return Container();
-        }
-        return NabiFlex(direction: Axis.vertical, data: config);
+  Widget convertConfigToWidget(LayoutItem layout) {
+    if (layout is LayoutFlex) {
+      return NabiFlex(layout: layout);
+    } else if (layout is LayoutWidget) {
+      return widget.registeredWidgets[layout.name] ?? Container();
+    } else {
+      return Container();
     }
   }
 
