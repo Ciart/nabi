@@ -2,11 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:nabi/nabi.dart';
 
 class NabiFlex extends StatefulWidget {
-  const NabiFlex({Key? key, required this.direction, required this.data})
-      : super(key: key);
+  const NabiFlex({Key? key, required this.layout}) : super(key: key);
 
-  final Axis direction;
-  final NabiItemData data;
+  final LayoutFlex layout;
 
   @override
   _NabiFlexState createState() => _NabiFlexState();
@@ -20,11 +18,7 @@ class _NabiFlexState extends State<NabiFlex> {
   void initState() {
     super.initState();
 
-    if (widget.data.children == null) {
-      return;
-    }
-
-    _sizes = widget.data.children!.map((e) => e.size).toList();
+    _sizes = widget.layout.children.map((e) => e.size).toList();
 
     var sum = computeSum(_sizes);
     var lastSize = 0;
@@ -40,11 +34,7 @@ class _NabiFlexState extends State<NabiFlex> {
   void didUpdateWidget(covariant NabiFlex oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.data.children == null) {
-      return;
-    }
-
-    _sizes = widget.data.children!.map((e) => e.size).toList();
+    _sizes = widget.layout.children.map((e) => e.size).toList();
 
     var sum = computeSum(_sizes);
     var lastSize = 0;
@@ -58,23 +48,24 @@ class _NabiFlexState extends State<NabiFlex> {
 
   @override
   Widget build(BuildContext context) {
+    var direction = widget.layout.direction;
+
     return LayoutBuilder(
         builder: (context, constraints) => Stack(children: [
               Flex(
-                  direction: widget.direction,
-                  children: widget.data.children?.map((e) {
-                        return Flexible(
-                            flex: e.size,
-                            child: Nabi.of(context).convertConfigToWidget(e));
-                      }).toList() ??
-                      []),
+                  direction: direction,
+                  children: widget.layout.children.map((e) {
+                    return Flexible(
+                        flex: e.size,
+                        child: Nabi.of(context).convertConfigToWidget(e));
+                  }).toList()),
               NabiDivider(
-                direction: widget.direction,
+                direction: direction,
                 color: const Color(0xff333333),
                 position: constraints.maxWidth * _ratios[0],
               ),
               NabiDivider(
-                direction: widget.direction,
+                direction: direction,
                 color: const Color(0xff333333),
                 position: constraints.maxWidth * _ratios[1],
               )
