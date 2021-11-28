@@ -29,6 +29,15 @@ class App extends StatelessWidget {
               LayoutWidget(name: 'b'),
               LayoutWidget(name: 'a'),
             ]),
+            LayoutFlex(
+                direction: Axis.vertical,
+                size: 200,
+                isFlex: false,
+                children: [
+                  LayoutWidget(name: 'a'),
+                  LayoutWidget(name: 'b'),
+                  LayoutWidget(name: 'a'),
+                ]),
           ])),
         );
       },

@@ -6,7 +6,7 @@ class Layout extends ChangeNotifier {
 
   LayoutItem root;
 
-  void addChild(String parentId, String name) {
+  void addChild(String parentId, String name, String? title) {
     var parent = findItem(root, parentId);
 
     if (parent is LayoutGroup) {

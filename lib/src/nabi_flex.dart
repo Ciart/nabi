@@ -51,25 +51,37 @@ class _NabiFlexState extends State<NabiFlex> {
     var layout = widget.layout;
 
     return LayoutBuilder(builder: (context, constraints) {
+      var maxSize = layout.direction == Axis.horizontal
+          ? constraints.maxWidth
+          : constraints.maxHeight;
+
       return Stack(children: () {
         List<Widget> children = [];
 
         children.add(Flex(
             direction: layout.direction,
             children: layout.children.map((child) {
-              return Flexible(
-                  flex: child.size,
-                  child: Nabi.of(context).convertConfigToWidget(child));
+              if (child.isFlex) {
+                return Flexible(
+                    flex: child.size,
+                    child: Nabi.of(context).convertConfigToWidget(child));
+              } else {
+                return SizedBox(
+                    width: layout.direction == Axis.horizontal
+                        ? child.size.toDouble()
+                        : null,
+                    height: layout.direction == Axis.vertical
+                        ? child.size.toDouble()
+                        : null,
+                    child: Nabi.of(context).convertConfigToWidget(child));
+              }
             }).toList()));
 
         for (int i = 0; i < layout.children.length - 1; i++) {
           children.add(NabiDivider(
             direction: layout.direction,
             color: const Color(0xff333333),
-            position: (layout.direction == Axis.horizontal
-                    ? constraints.maxWidth
-                    : constraints.maxHeight) *
-                _ratios[i],
+            position: maxSize * _ratios[i],
             onDrag: (details) {
               print(i.toString() + ": " + details.delta.toString());
             },
