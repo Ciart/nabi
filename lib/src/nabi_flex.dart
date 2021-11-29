@@ -12,36 +12,28 @@ class NabiFlex extends StatefulWidget {
 }
 
 class _NabiFlexState extends State<NabiFlex> {
-  var _sizes = <int>[];
-  var _ratios = <double>[];
+  late List<double> _sizes;
+
+  double get _totalSize => _computeSum(_sizes);
+
+  void _init() {
+    _sizes =
+        widget.layout.children.map((child) => child.size.toDouble()).toList();
+  }
 
   @override
   void initState() {
     super.initState();
 
-    _sizes = widget.layout.children.map((e) => e.size).toList();
-
-    var sum = computeSum(_sizes);
-    var lastSize = 0;
-    _ratios = [];
-
-    for (int i = 0; i < _sizes.length; i++) {
-      _ratios.add(_sizes[i] / sum);
-    }
+    _init();
   }
 
   @override
   void didUpdateWidget(covariant NabiFlex oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _sizes = widget.layout.children.map((e) => e.size).toList();
-
-    var sum = computeSum(_sizes);
-    var lastSize = 0;
-    _ratios = [];
-
-    for (int i = 0; i < _sizes.length; i++) {
-      _ratios.add(_sizes[i] / sum);
+    if (oldWidget.layout != widget.layout) {
+      _init();
     }
   }
 
@@ -53,7 +45,6 @@ class _NabiFlexState extends State<NabiFlex> {
       var maxSize = layout.direction == Axis.horizontal
           ? constraints.maxWidth
           : constraints.maxHeight;
-      var sizes = _ratios.map((ratio) => maxSize * ratio).toList();
 
       return Stack(children: () {
         List<Widget> children = [];
@@ -63,7 +54,7 @@ class _NabiFlexState extends State<NabiFlex> {
             children: layout.children.mapIndexed((child, i) {
               if (child.isFlex) {
                 return Flexible(
-                    flex: sizes[i].toInt(),
+                    flex: _sizes[i].toInt(),
                     child: Nabi.of(context).convertConfigToWidget(child));
               } else {
                 return SizedBox(
@@ -79,15 +70,31 @@ class _NabiFlexState extends State<NabiFlex> {
 
         var position = 0.0;
 
-        for (int i = 0; i < sizes.length - 1; i++) {
-          position += sizes[i];
+        for (int i = 0; i < _sizes.length - 1; i++) {
+          position += _computeChildRenderSize(_sizes[i], _totalSize, maxSize);
 
           children.add(NabiDivider(
             direction: layout.direction,
             color: const Color(0xff333333),
             position: position,
-            onDrag: (details) {
-              print(i.toString() + ": " + details.delta.toString());
+            onDragUpdate: (details) {
+              setState(() {
+                _sizes = _sizes
+                    .map((size) =>
+                        _computeChildRenderSize(size, _totalSize, maxSize))
+                    .toList();
+
+                var delta = layout.direction == Axis.horizontal
+                    ? details.delta.dx
+                    : details.delta.dy;
+
+                _sizes[i] += delta;
+                _sizes[i + 1] -= delta;
+              });
+            },
+            onDragEnd: (details) {
+              Nabi.of(context).layout.updateChildrenSize(
+                  layout.id, _sizes.map((e) => e.toInt()).toList());
             },
           ));
         }
@@ -96,13 +103,18 @@ class _NabiFlexState extends State<NabiFlex> {
     });
   }
 
-  int computeSum(List<int> list) {
-    var sum = 0;
+  double _computeSum(List<double> list) {
+    var sum = 0.0;
 
     for (var item in list) {
       sum += item;
     }
 
     return sum;
+  }
+
+  double _computeChildRenderSize(
+      double size, double totalSize, double maxSize) {
+    return size / totalSize * maxSize;
   }
 }

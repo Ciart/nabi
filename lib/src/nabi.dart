@@ -2,11 +2,11 @@ import 'package:flutter/widgets.dart';
 import 'package:nabi/nabi.dart';
 
 class Nabi extends StatefulWidget {
-  const Nabi({Key? key, required this.registeredWidgets, required this.data})
+  const Nabi({Key? key, required this.registeredWidgets, required this.layout})
       : super(key: key);
 
   final Map<String, Widget> registeredWidgets;
-  final Layout data;
+  final Layout layout;
 
   static NabiState of(BuildContext context) {
     final result = context.findAncestorStateOfType<NabiState>();
@@ -21,10 +21,7 @@ class Nabi extends StatefulWidget {
 }
 
 class NabiState extends State<Nabi> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  Layout get layout => widget.layout;
 
   Widget convertConfigToWidget(LayoutItem layout) {
     if (layout is LayoutFlex) {
@@ -41,6 +38,6 @@ class NabiState extends State<Nabi> {
 
   @override
   Widget build(BuildContext context) {
-    return convertConfigToWidget(widget.data.root);
+    return convertConfigToWidget(widget.layout.root);
   }
 }

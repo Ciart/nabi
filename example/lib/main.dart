@@ -3,6 +3,7 @@ import 'package:nabi/nabi.dart';
 
 import 'a_panel.dart';
 import 'b_panel.dart';
+import 'counter.dart';
 
 void main() {
   runApp(App());
@@ -19,9 +20,12 @@ class App extends StatelessWidget {
         return Nabi(
           registeredWidgets: {
             'a': Builder(builder: (context) => APanel()),
-            'b': Builder(builder: (context) => BPanel())
+            'b': Builder(builder: (context) => BPanel()),
+            'counter': Builder(
+              builder: (context) => Counter(),
+            )
           },
-          data: Layout(LayoutFlex(direction: Axis.horizontal, children: [
+          layout: Layout(LayoutFlex(direction: Axis.horizontal, children: [
             LayoutWidget(name: 'a'),
             LayoutStack(children: [
               LayoutWidget(name: 'b'),
@@ -31,9 +35,9 @@ class App extends StatelessWidget {
                 //size: 200,
                 //isFlex: false,
                 children: [
+                  LayoutWidget(name: 'counter'),
                   LayoutWidget(name: 'a'),
-                  LayoutWidget(name: 'b'),
-                  LayoutWidget(name: 'a'),
+                  LayoutWidget(name: 'counter'),
                 ]),
           ])),
         );

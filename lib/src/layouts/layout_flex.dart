@@ -13,6 +13,17 @@ class LayoutFlex extends LayoutGroup {
 
   final Axis direction;
 
-  LayoutItem copyWith({String? id, int? size, bool? isFlex}) =>
-      LayoutFlex(children: children, direction: direction);
+  @override
+  LayoutFlex copyWith(
+          {String? id,
+          int? size,
+          bool? isFlex,
+          List<LayoutItem>? children,
+          Axis? direction}) =>
+      LayoutFlex(
+          id: id ?? this.id,
+          size: size ?? this.size,
+          isFlex: isFlex ?? this.isFlex,
+          children: children ?? this.children,
+          direction: direction ?? this.direction);
 }

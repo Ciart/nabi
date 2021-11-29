@@ -16,7 +16,7 @@ class LayoutStack extends LayoutGroup {
           id: id ?? this.id,
           size: size ?? this.size,
           isFlex: isFlex ?? this.isFlex,
-          children: children == null
-              ? children!.whereType<LayoutWidget>().toList()
+          children: children != null
+              ? children.whereType<LayoutWidget>().toList()
               : this.children);
 }
