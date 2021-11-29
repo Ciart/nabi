@@ -2,9 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:nabi/nabi.dart';
 
 class NabiStack extends StatefulWidget {
-  const NabiStack({Key? key, required this.data}) : super(key: key);
+  const NabiStack({Key? key, required this.layout}) : super(key: key);
 
-  final LayoutGroup data;
+  final LayoutStack layout;
 
   @override
   _NabiStackState createState() => _NabiStackState();
@@ -16,11 +16,11 @@ class _NabiStackState extends State<NabiStack> {
     return Column(
       children: [
         Row(
-          children: widget.data.children.map((e) => Text(e.id)).toList(),
+          children: widget.layout.children.map((e) => Text(e.title)).toList(),
         ),
         Expanded(
             child: Nabi.of(context)
-                .convertConfigToWidget(widget.data.children![0]))
+                .convertConfigToWidget(widget.layout.children[0]))
       ],
     );
   }

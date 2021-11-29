@@ -14,16 +14,16 @@ class Layout extends ChangeNotifier {
     }
   }
 
-  LayoutItem? findItem(LayoutItem data, String parentId) {
-    if (data.id == parentId) {
-      return data;
+  LayoutItem? findItem(LayoutItem layout, String parentId) {
+    if (layout.id == parentId) {
+      return layout;
     }
 
-    if (!(data is LayoutGroup)) {
+    if (!(layout is LayoutGroup)) {
       return null;
     }
 
-    for (var child in data.children) {
+    for (var child in layout.children) {
       var result = findItem(child, parentId);
 
       if (result != null) {

@@ -23,16 +23,13 @@ class App extends StatelessWidget {
           },
           data: Layout(LayoutFlex(direction: Axis.horizontal, children: [
             LayoutWidget(name: 'a'),
-            LayoutWidget(name: 'b'),
-            LayoutFlex(direction: Axis.vertical, children: [
-              LayoutWidget(name: 'a'),
+            LayoutStack(children: [
               LayoutWidget(name: 'b'),
               LayoutWidget(name: 'a'),
             ]),
-            LayoutFlex(
-                direction: Axis.vertical,
-                size: 200,
-                isFlex: false,
+            LayoutFlex(direction: Axis.vertical,
+                //size: 200,
+                //isFlex: false,
                 children: [
                   LayoutWidget(name: 'a'),
                   LayoutWidget(name: 'b'),

@@ -9,7 +9,7 @@ abstract class LayoutGroup extends LayoutItem {
 
   final List<LayoutItem> children;
 
-  void addChild(LayoutItem item) {
-    children.add(item);
-  }
+  @override
+  LayoutItem copyWith(
+      {String? id, int? size, bool? isFlex, List<LayoutItem>? children});
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:nabi/nabi.dart';
+import 'package:nabi/src/extension/extended_iterable.dart';
 
 class NabiFlex extends StatefulWidget {
   const NabiFlex({Key? key, required this.layout}) : super(key: key);
@@ -24,9 +25,8 @@ class _NabiFlexState extends State<NabiFlex> {
     var lastSize = 0;
     _ratios = [];
 
-    for (int i = 0; i < _sizes.length - 1; i++) {
-      lastSize += _sizes[i];
-      _ratios.add(lastSize / sum);
+    for (int i = 0; i < _sizes.length; i++) {
+      _ratios.add(_sizes[i] / sum);
     }
   }
 
@@ -40,9 +40,8 @@ class _NabiFlexState extends State<NabiFlex> {
     var lastSize = 0;
     _ratios = [];
 
-    for (int i = 0; i < _sizes.length - 1; i++) {
-      lastSize += _sizes[i];
-      _ratios.add(lastSize / sum);
+    for (int i = 0; i < _sizes.length; i++) {
+      _ratios.add(_sizes[i] / sum);
     }
   }
 
@@ -54,16 +53,17 @@ class _NabiFlexState extends State<NabiFlex> {
       var maxSize = layout.direction == Axis.horizontal
           ? constraints.maxWidth
           : constraints.maxHeight;
+      var sizes = _ratios.map((ratio) => maxSize * ratio).toList();
 
       return Stack(children: () {
         List<Widget> children = [];
 
         children.add(Flex(
             direction: layout.direction,
-            children: layout.children.map((child) {
+            children: layout.children.mapIndexed((child, i) {
               if (child.isFlex) {
                 return Flexible(
-                    flex: child.size,
+                    flex: sizes[i].toInt(),
                     child: Nabi.of(context).convertConfigToWidget(child));
               } else {
                 return SizedBox(
@@ -77,17 +77,20 @@ class _NabiFlexState extends State<NabiFlex> {
               }
             }).toList()));
 
-        for (int i = 0; i < layout.children.length - 1; i++) {
+        var position = 0.0;
+
+        for (int i = 0; i < sizes.length - 1; i++) {
+          position += sizes[i];
+
           children.add(NabiDivider(
             direction: layout.direction,
             color: const Color(0xff333333),
-            position: maxSize * _ratios[i],
+            position: position,
             onDrag: (details) {
               print(i.toString() + ": " + details.delta.toString());
             },
           ));
         }
-
         return children;
       }());
     });

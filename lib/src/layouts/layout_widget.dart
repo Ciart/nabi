@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:nabi/nabi.dart';
 
 @immutable
@@ -12,6 +12,17 @@ class LayoutWidget extends LayoutItem {
       : title = title ?? name,
         super(id: id, size: size, isFlex: isFlex);
 
-  final String name;
+  final GlobalKey key = GlobalKey();
   final String title;
+  final String name;
+
+  @override
+  LayoutWidget copyWith(
+          {String? id, int? size, bool? isFlex, String? title, String? name}) =>
+      LayoutWidget(
+          id: id ?? this.id,
+          size: size ?? this.size,
+          isFlex: isFlex ?? this.isFlex,
+          title: title ?? this.title,
+          name: name ?? this.name);
 }

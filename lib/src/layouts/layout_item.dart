@@ -9,4 +9,6 @@ abstract class LayoutItem {
   final String id;
   final int size;
   final bool isFlex;
+
+  LayoutItem copyWith({String? id, int? size, bool? isFlex});
 }
