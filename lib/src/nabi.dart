@@ -26,6 +26,8 @@ class NabiState extends State<Nabi> {
   Widget convertConfigToWidget(LayoutItem layout) {
     if (layout is LayoutFlex) {
       return NabiFlex(layout: layout);
+    } else if (layout is LayoutStack) {
+      return NabiStack(layout: layout);
     } else if (layout is LayoutWidget) {
       return Container(
           key: layout.key, child: widget.registeredWidgets[layout.name]);
