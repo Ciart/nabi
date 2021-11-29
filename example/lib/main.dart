@@ -30,6 +30,7 @@ class App extends StatelessWidget {
             LayoutStack(children: [
               LayoutWidget(name: 'b'),
               LayoutWidget(name: 'a'),
+              LayoutWidget(name: 'counter'),
             ]),
             LayoutFlex(direction: Axis.vertical,
                 //size: 200,
@@ -37,7 +38,6 @@ class App extends StatelessWidget {
                 children: [
                   LayoutWidget(name: 'counter'),
                   LayoutWidget(name: 'a'),
-                  LayoutWidget(name: 'counter'),
                 ]),
           ])),
         );

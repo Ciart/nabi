@@ -49,6 +49,7 @@ class _NabiFlexState extends State<NabiFlex> {
       return Stack(children: () {
         List<Widget> children = [];
 
+        // TODO: 자식 테두리 빈 픽셀 수정, 자식 사이에 선 추가
         children.add(Flex(
             direction: layout.direction,
             children: layout.children.mapIndexed((child, i) {
