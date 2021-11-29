@@ -1,33 +1,44 @@
-import 'package:flutter/foundation.dart';
 import 'package:nabi/nabi.dart';
 
-class Layout extends ChangeNotifier {
+class Layout {
   Layout(this.root);
 
   LayoutItem root;
 
-  void addChild(String parentId, String name) {
-    var parent = findItem(root, parentId);
-
-    if (parent is LayoutGroup) {
-      parent.children.add(LayoutWidget(name: name));
-    }
-  }
-
-  LayoutItem? findItem(LayoutItem data, String parentId) {
-    if (data.id == parentId) {
-      return data;
+  LayoutItem? findItem(LayoutItem layout, String parentId) {
+    if (layout.id == parentId) {
+      return layout;
     }
 
-    if (!(data is LayoutGroup)) {
+    if (!(layout is LayoutGroup)) {
       return null;
     }
 
-    for (var child in data.children) {
+    for (var child in layout.children) {
       var result = findItem(child, parentId);
 
       if (result != null) {
         return result;
+      }
+    }
+  }
+
+  void addChild(String parentId, LayoutWidget layoutWidget) {
+    var parent = findItem(root, parentId);
+
+    if (parent is LayoutGroup) {
+      parent.children.add(layoutWidget);
+    }
+  }
+
+  void updateChildrenSize(String parentId, List<int> sizes) {
+    var parent = findItem(root, parentId);
+
+    if (parent is LayoutFlex) {
+      var children = parent.children;
+
+      for (int i = 0; i < children.length; i++) {
+        children[i] = children[i].copyWith(size: sizes[i]);
       }
     }
   }

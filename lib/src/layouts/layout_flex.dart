@@ -12,4 +12,18 @@ class LayoutFlex extends LayoutGroup {
       : super(id: id, size: size, isFlex: isFlex, children: children);
 
   final Axis direction;
+
+  @override
+  LayoutFlex copyWith(
+          {String? id,
+          int? size,
+          bool? isFlex,
+          List<LayoutItem>? children,
+          Axis? direction}) =>
+      LayoutFlex(
+          id: id ?? this.id,
+          size: size ?? this.size,
+          isFlex: isFlex ?? this.isFlex,
+          children: children ?? this.children,
+          direction: direction ?? this.direction);
 }
