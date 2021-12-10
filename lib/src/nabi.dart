@@ -5,7 +5,7 @@ class Nabi extends StatefulWidget {
   const Nabi({Key? key, required this.registeredWidgets, required this.layout})
       : super(key: key);
 
-  final Map<String, Widget> registeredWidgets;
+  final Map<String, WidgetBuilder> registeredWidgets;
   final Layout layout;
 
   static NabiState of(BuildContext context) {
@@ -20,6 +20,27 @@ class Nabi extends StatefulWidget {
   NabiState createState() => NabiState();
 }
 
+class NabiWidget extends InheritedWidget {
+  NabiWidget({
+    Key? key,
+    required this.layout,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  final LayoutWidget layout;
+
+  static NabiWidget of(BuildContext context) {
+    final result = context.dependOnInheritedWidgetOfExactType<NabiWidget>();
+
+    assert(result != null, 'No NabiWidget found in context');
+
+    return result!;
+  }
+
+  @override
+  bool updateShouldNotify(NabiWidget oldWidget) => layout != oldWidget.layout;
+}
+
 class NabiState extends State<Nabi> {
   Layout get layout => widget.layout;
 
@@ -29,8 +50,13 @@ class NabiState extends State<Nabi> {
     } else if (layout is LayoutStack) {
       return NabiStack(layout: layout);
     } else if (layout is LayoutWidget) {
-      return Container(
-          key: layout.key, child: widget.registeredWidgets[layout.name]);
+      var builder = widget.registeredWidgets[layout.name];
+
+      assert(
+          builder != null, '\'$layout.name\' is not in the registeredWidgets.');
+
+      return NabiWidget(
+          layout: layout, child: Builder(key: layout.key, builder: builder!));
     } else {
       return Container();
     }

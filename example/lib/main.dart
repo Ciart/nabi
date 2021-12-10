@@ -19,19 +19,18 @@ class App extends StatelessWidget {
       builder: (context, int) {
         return Nabi(
           registeredWidgets: {
-            'a': Builder(builder: (context) => APanel()),
-            'b': Builder(builder: (context) => BPanel()),
-            'counter': Builder(
-              builder: (context) => Counter(),
-            )
+            'a': (context) => APanel(),
+            'b': (context) => BPanel(),
+            'counter': (context) => Counter()
           },
           layout: Layout(LayoutFlex(direction: Axis.horizontal, children: [
             LayoutWidget(name: 'a'),
             LayoutStack(children: [
-              LayoutWidget(name: 'b'),
+              LayoutWidget(name: 'b', arguments: BArguments(Color(0xff453454))),
               LayoutWidget(name: 'a'),
               LayoutWidget(name: 'counter'),
             ]),
+            LayoutWidget(name: 'b', arguments: BArguments(Color(0xff382a00))),
             LayoutFlex(direction: Axis.vertical,
                 //size: 200,
                 //isFlex: false,
