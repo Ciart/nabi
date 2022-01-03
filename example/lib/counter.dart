@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nabi/nabi.dart';
 
 class Counter extends StatefulWidget {
   const Counter({Key? key}) : super(key: key);
@@ -18,7 +19,8 @@ class _CounterState extends State<Counter> {
         TextButton(
             onPressed: () {
               setState(() {
-                _count++;
+                Nabi.of(context).layout.addChild(
+                    Nabi.of(context).layout.root.id, LayoutWidget(name: 'a'));
               });
             },
             child: Text('Increased'))

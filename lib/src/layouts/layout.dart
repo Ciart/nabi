@@ -27,11 +27,13 @@ class Layout {
     return findItem(targetId, root);
   }
 
+  LayoutItem? findParent(String childId) {}
+
   void addChild(String parentId, LayoutWidget layoutWidget) {
     var parent = findItemInRoot(parentId);
 
     if (parent is LayoutGroup) {
-      parent.children.add(layoutWidget);
+      parent.copyWith(children: [...parent.children, layoutWidget]);
     }
   }
 
