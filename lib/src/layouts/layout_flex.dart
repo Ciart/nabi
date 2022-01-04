@@ -1,17 +1,22 @@
 import 'package:flutter/widgets.dart';
 import 'package:nabi/nabi.dart';
 
-@immutable
 class LayoutFlex extends LayoutGroup {
   LayoutFlex(
       {String? id,
       int size = 1,
       bool isFlex = true,
       required List<LayoutItem> children,
-      required this.direction})
-      : super(id: id, size: size, isFlex: isFlex, children: children);
+      required Axis direction})
+      : _direction = direction,
+        super(id: id, size: size, isFlex: isFlex, children: children);
 
-  final Axis direction;
+  Axis _direction;
+  Axis get direction => _direction;
+  set direction(Axis value) {
+    _direction = value;
+    notifyListeners();
+  }
 
   @override
   LayoutFlex copyWith(

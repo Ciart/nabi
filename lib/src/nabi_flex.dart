@@ -39,68 +39,74 @@ class _NabiFlexState extends State<NabiFlex> {
 
   @override
   Widget build(BuildContext context) {
-    var layout = widget.layout;
+    widget.layout.addListener(() => _init());
 
     return LayoutBuilder(builder: (context, constraints) {
-      var maxSize = layout.direction == Axis.horizontal
+      var maxSize = widget.layout.direction == Axis.horizontal
           ? constraints.maxWidth
           : constraints.maxHeight;
 
-      return Stack(children: () {
-        List<Widget> children = [];
+      return AnimatedBuilder(
+          animation: widget.layout,
+          builder: (context, child) => Stack(children: () {
+                List<Widget> children = [];
 
-        // TODO: 자식 테두리 빈 픽셀 수정, 자식 사이에 선 추가
-        children.add(Flex(
-            direction: layout.direction,
-            children: layout.children.mapIndexed((child, i) {
-              if (child.isFlex) {
-                return Flexible(
-                    flex: _sizes[i].toInt(),
-                    child: Nabi.of(context).convertConfigToWidget(child));
-              } else {
-                return SizedBox(
-                    width: layout.direction == Axis.horizontal
-                        ? child.size.toDouble()
-                        : null,
-                    height: layout.direction == Axis.vertical
-                        ? child.size.toDouble()
-                        : null,
-                    child: Nabi.of(context).convertConfigToWidget(child));
-              }
-            }).toList()));
+                // TODO: 자식 테두리 빈 픽셀 수정, 자식 사이에 선 추가
+                children.add(Flex(
+                    direction: widget.layout.direction,
+                    children: widget.layout.children.mapIndexed((child, i) {
+                      if (child.isFlex) {
+                        return Flexible(
+                            flex: _sizes[i].toInt(),
+                            child:
+                                Nabi.of(context).convertConfigToWidget(child));
+                      } else {
+                        return SizedBox(
+                            width: widget.layout.direction == Axis.horizontal
+                                ? child.size.toDouble()
+                                : null,
+                            height: widget.layout.direction == Axis.vertical
+                                ? child.size.toDouble()
+                                : null,
+                            child:
+                                Nabi.of(context).convertConfigToWidget(child));
+                      }
+                    }).toList()));
 
-        var position = 0.0;
+                var position = 0.0;
 
-        for (int i = 0; i < _sizes.length - 1; i++) {
-          position += _computeChildRenderSize(_sizes[i], _totalSize, maxSize);
+                for (int i = 0; i < _sizes.length - 1; i++) {
+                  position +=
+                      _computeChildRenderSize(_sizes[i], _totalSize, maxSize);
 
-          children.add(NabiDivider(
-            direction: layout.direction,
-            color: const Color(0xff333333),
-            position: position,
-            onDragUpdate: (details) {
-              setState(() {
-                _sizes = _sizes
-                    .map((size) =>
-                        _computeChildRenderSize(size, _totalSize, maxSize))
-                    .toList();
+                  children.add(NabiDivider(
+                    direction: widget.layout.direction,
+                    color: const Color(0xff333333),
+                    position: position,
+                    onDragUpdate: (details) {
+                      setState(() {
+                        _sizes = _sizes
+                            .map((size) => _computeChildRenderSize(
+                                size, _totalSize, maxSize))
+                            .toList();
 
-                var delta = layout.direction == Axis.horizontal
-                    ? details.delta.dx
-                    : details.delta.dy;
+                        var delta = widget.layout.direction == Axis.horizontal
+                            ? details.delta.dx
+                            : details.delta.dy;
 
-                _sizes[i] += delta;
-                _sizes[i + 1] -= delta;
-              });
-            },
-            onDragEnd: (details) {
-              Nabi.of(context).layout.updateChildrenSize(
-                  layout.id, _sizes.map((e) => e.toInt()).toList());
-            },
-          ));
-        }
-        return children;
-      }());
+                        _sizes[i] += delta;
+                        _sizes[i + 1] -= delta;
+                      });
+                    },
+                    onDragEnd: (details) {
+                      Nabi.of(context).layout.updateChildrenSize(
+                          widget.layout.id,
+                          _sizes.map((e) => e.toInt()).toList());
+                    },
+                  ));
+                }
+                return children;
+              }()));
     });
   }
 

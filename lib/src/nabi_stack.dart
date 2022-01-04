@@ -17,24 +17,29 @@ class _NabiStackState extends State<NabiStack> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Tab(
-            titles: widget.layout.children.map((e) => e.title).toList(),
-            onChange: (index) {
-              setState(() {
-                selectedIndex = index;
-              });
-            }),
-        Expanded(
-            child: Stack(
-          children: widget.layout.children
-              .mapIndexed((e, i) => Offstage(
-                  offstage: i != selectedIndex,
-                  child: Nabi.of(context).convertConfigToWidget(e)))
-              .toList(),
-        ))
-      ],
+    return AnimatedBuilder(
+      animation: widget.layout,
+      builder: (context, child) => Column(
+        children: [
+          Tab(
+              titles: widget.layout.children.map((e) {
+                return e is LayoutWidget ? e.title : e.id;
+              }).toList(),
+              onChange: (index) {
+                setState(() {
+                  selectedIndex = index;
+                });
+              }),
+          Expanded(
+              child: Stack(
+            children: widget.layout.children
+                .mapIndexed((e, i) => Offstage(
+                    offstage: i != selectedIndex,
+                    child: Nabi.of(context).convertConfigToWidget(e)))
+                .toList(),
+          ))
+        ],
+      ),
     );
   }
 }

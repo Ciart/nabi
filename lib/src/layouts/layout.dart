@@ -27,13 +27,11 @@ class Layout {
     return findItem(targetId, root);
   }
 
-  LayoutItem? findParent(String childId) {}
-
-  void addChild(String parentId, LayoutWidget layoutWidget) {
+  void addChild(String parentId, LayoutItem layout) {
     var parent = findItemInRoot(parentId);
 
     if (parent is LayoutGroup) {
-      parent.copyWith(children: [...parent.children, layoutWidget]);
+      parent.addChild(layout);
     }
   }
 
@@ -44,7 +42,7 @@ class Layout {
       var children = parent.children;
 
       for (int i = 0; i < children.length; i++) {
-        children[i] = children[i].copyWith(size: sizes[i]);
+        children[i].size = sizes[i];
       }
     }
   }
